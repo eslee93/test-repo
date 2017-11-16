@@ -1,0 +1,1447 @@
+{
+  "front-version": "2.11.2",
+  "version": 3,
+  "nodes": [
+    {
+      "type": "Project",
+      "description": "- To execute these test scripts, I temporarily configured product(Game) information.  \n- We will assume this product as legacy product.  \n",
+      "id": "ea95d713-3331-4fdf-b172-6ab7e4cdf794",
+      "lastModified": "2017-11-16T14:32:18.358-08:00",
+      "name": "TPA 2.0 - NPSN",
+      "remoteModification": "2017-11-16T22:32:18.259Z"
+    },
+    {
+      "type": "Scenario",
+      "description": "- PRODUCT_ID: 10100  \n- CLIENT_ID: 6093773340  \n- CLIENT_SECRET: baf65060dd42098c5dc5bd5210ff0514881d53018ee7edfa452c12508df49937  \n- CLIENT_AUTHORIZATION: NjA5Mzc3MzM0MDpiYWY2NTA2MGRkNDIwOThjNWRjNWJkNTIxMGZmMDUxNDg4MWQ1MzAxOGVlN2VkZmE0NTJjMTI1MDhkZjQ5OTM3",
+      "id": "43463d53-4a7d-4c43-8349-4b1b6801da57",
+      "lastModified": "2017-11-15T17:42:54.021-08:00",
+      "name": "Get npsn info. (using legacy product id)",
+      "requestOrder": [
+        "Launcher login to get id_token",
+        "Request authorize_game",
+        "Request access_token",
+        "Request user NPSN information."
+      ],
+      "parentId": "ea95d713-3331-4fdf-b172-6ab7e4cdf794"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": [
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "auto_login",
+              "value": "false"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "client_id",
+              "value": "${LAUNCHER_CLIENT_ID}"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "device_id",
+              "value": "${DEVICE_ID}"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "id",
+              "value": "${USER_ID}"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "password",
+              "value": "${USER_PASSWORD}"
+            }
+          ]
+        },
+        "bodyType": "Form",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${ACCOUNT_WEB_HOST}",
+        "path": "/account/login/launcher"
+      },
+      "id": "0a4951d4-38f0-427d-b1a6-f8f9d856fdb6",
+      "lastModified": "2017-11-15T17:42:54.021-08:00",
+      "name": "Launcher login to get id_token",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/x-www-form-urlencoded"
+        }
+      ],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "200"
+        },
+        {
+          "comparison": "Exists",
+          "subject": "ResponseJsonBody",
+          "path": "$.id_token",
+          "value": "200"
+        }
+      ],
+      "metaInfo": {
+        "ownerId": "auth0|59273f64e2bfaf3e2bc4389a"
+      },
+      "parentId": "43463d53-4a7d-4c43-8349-4b1b6801da57"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+        "name": "GET"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": [
+            {
+              "enabled": true,
+              "name": "token",
+              "value": "${\"TPA 2.0 - NPSN\".\"Get npsn info. (using legacy product id)\".\"Request access_token\".\"response\".\"body\".\"access_token\"}"
+            },
+            {
+              "enabled": true,
+              "name": "product_id",
+              "value": "10100"
+            },
+            {
+              "enabled": true,
+              "name": "user_no",
+              "value": "${\"TPA 2.0 - NPSN\".\"Get npsn info. (using legacy product id)\".\"Launcher login to get id_token\".\"response\".\"body\".\"user_no\"}"
+            }
+          ]
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${MANTIS_HOST}",
+        "path": "/users/me/npsn"
+      },
+      "id": "2a599838-17dc-4459-97a0-cf775f23c5d2",
+      "lastModified": "2017-11-15T17:43:14.403-08:00",
+      "name": "Request user NPSN information.",
+      "headers": [],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "404"
+        },
+        {
+          "comparison": "Equals",
+          "subject": "ResponseJsonBody",
+          "enabled": true,
+          "path": "$.error.code",
+          "value": "\"1005\""
+        }
+      ],
+      "metaInfo": {
+        "ownerId": "auth0|59273f64e2bfaf3e2bc4389a"
+      },
+      "parentId": "43463d53-4a7d-4c43-8349-4b1b6801da57"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": [
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "client_id",
+              "value": "6093773340"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "grant_type",
+              "value": "authorization_code"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "code",
+              "value": "${\"TPA 2.0 - NPSN\".\"Get npsn info. (using legacy product id)\".\"Request authorize_game\".\"response\".\"body\".\"code\"}"
+            }
+          ]
+        },
+        "bodyType": "Form",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${APIGW_HOST}",
+        "path": "/oauth2/v1/token"
+      },
+      "id": "49b71dff-9bd8-4b2c-81a0-6f9093b6a6cc",
+      "lastModified": "2017-11-15T17:43:14.403-08:00",
+      "name": "Request access_token",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/x-www-form-urlencoded"
+        },
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "Basic NjA5Mzc3MzM0MDpiYWY2NTA2MGRkNDIwOThjNWRjNWJkNTIxMGZmMDUxNDg4MWQ1MzAxOGVlN2VkZmE0NTJjMTI1MDhkZjQ5OTM3"
+        }
+      ],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "200"
+        },
+        {
+          "comparison": "Exists",
+          "subject": "ResponseJsonBody",
+          "path": "$.access_token",
+          "value": "200"
+        }
+      ],
+      "metaInfo": {
+        "ownerId": "auth0|59273f64e2bfaf3e2bc4389a"
+      },
+      "parentId": "43463d53-4a7d-4c43-8349-4b1b6801da57"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": [
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "id_token",
+              "value": "${\"TPA 2.0 - NPSN\".\"Get npsn info. (using legacy product id)\".\"Launcher login to get id_token\".\"response\".\"body\".\"id_token\"}"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "user_no",
+              "value": "${\"TPA 2.0 - NPSN\".\"Get npsn info. (using legacy product id)\".\"Launcher login to get id_token\".\"response\".\"body\".\"user_no\"}"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "product_id",
+              "value": "10100"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "device_id",
+              "value": "${DEVICE_ID}"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "client_id",
+              "value": "6093773340"
+            }
+          ]
+        },
+        "bodyType": "Form",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "retryConfiguration": {
+        "intervalInSeconds": 10,
+        "retryCount": 1
+      },
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${MANTIS_HOST}",
+        "path": "/auth/authorize_game"
+      },
+      "description": "",
+      "id": "4cf5df9a-6a4a-4c23-afa1-36b2e4a4b2c9",
+      "lastModified": "2017-11-15T17:43:14.403-08:00",
+      "name": "Request authorize_game",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/x-www-form-urlencoded"
+        }
+      ],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "200"
+        },
+        {
+          "comparison": "Exists",
+          "subject": "ResponseJsonBody",
+          "path": "$.code",
+          "value": "200"
+        }
+      ],
+      "metaInfo": {
+        "ownerId": "auth0|59273f64e2bfaf3e2bc4389a"
+      },
+      "parentId": "43463d53-4a7d-4c43-8349-4b1b6801da57"
+    },
+    {
+      "type": "Scenario",
+      "description": "- PRODUCT_ID: 10200  \n- CLIENT_ID: 7456351722  \n- CLIENT_SECRET: 3b4a72dd2487033f9a4243f3fd4ee5dd9413167d4c56f914e4a2778af941e1d4  \n- CLIENT_AUTHORIZATION: NzQ1NjM1MTcyMjozYjRhNzJkZDI0ODcwMzNmOWE0MjQzZjNmZDRlZTVkZDk0MTMxNjdkNGM1NmY5MTRlNGEyNzc4YWY5NDFlMWQ0",
+      "id": "8e80fd4d-4828-499b-8d02-35955a2d14e7",
+      "lastModified": "2017-11-15T17:44:49.962-08:00",
+      "name": "Get npsn info. (using mobile first product id)",
+      "requestOrder": [
+        "Launcher login to get id_token",
+        "Request authorize_game",
+        "Request access_token",
+        "Request user NPSN information."
+      ],
+      "parentId": "ea95d713-3331-4fdf-b172-6ab7e4cdf794"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+        "name": "GET"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": [
+            {
+              "enabled": true,
+              "name": "token",
+              "value": "${\"TPA 2.0 - NPSN\".\"Get npsn info. (using mobile first product id)\".\"Request access_token\".\"response\".\"body\".\"access_token\"}"
+            },
+            {
+              "enabled": true,
+              "name": "product_id",
+              "value": "10200"
+            },
+            {
+              "enabled": true,
+              "name": "user_no",
+              "value": "${\"TPA 2.0 - NPSN\".\"Get npsn info. (using mobile first product id)\".\"Launcher login to get id_token\".\"response\".\"body\".\"user_no\"}"
+            }
+          ]
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${MANTIS_HOST}",
+        "path": "/users/me/npsn"
+      },
+      "id": "3a66ed5d-aae3-473c-aa25-f151f8253c58",
+      "lastModified": "2017-11-15T17:44:49.962-08:00",
+      "name": "Request user NPSN information.",
+      "headers": [],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "404"
+        },
+        {
+          "comparison": "Equals",
+          "subject": "ResponseJsonBody",
+          "enabled": true,
+          "path": "$.error.code",
+          "value": "\"1004\""
+        }
+      ],
+      "metaInfo": {
+        "ownerId": "auth0|59273f64e2bfaf3e2bc4389a"
+      },
+      "parentId": "8e80fd4d-4828-499b-8d02-35955a2d14e7"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": [
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "client_id",
+              "value": "7456351722"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "grant_type",
+              "value": "authorization_code"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "code",
+              "value": "${\"TPA 2.0 - NPSN\".\"Get npsn info. (using mobile first product id)\".\"Request authorize_game\".\"response\".\"body\".\"code\"}"
+            }
+          ]
+        },
+        "bodyType": "Form",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${APIGW_HOST}",
+        "path": "/oauth2/v1/token"
+      },
+      "id": "83721c53-619e-4305-9abc-b84ca745bb41",
+      "lastModified": "2017-11-15T17:43:14.402-08:00",
+      "name": "Request access_token",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/x-www-form-urlencoded"
+        },
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "Basic NzQ1NjM1MTcyMjozYjRhNzJkZDI0ODcwMzNmOWE0MjQzZjNmZDRlZTVkZDk0MTMxNjdkNGM1NmY5MTRlNGEyNzc4YWY5NDFlMWQ0"
+        }
+      ],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "200"
+        },
+        {
+          "comparison": "Exists",
+          "subject": "ResponseJsonBody",
+          "path": "$.access_token",
+          "value": "200"
+        }
+      ],
+      "metaInfo": {
+        "ownerId": "auth0|59273f64e2bfaf3e2bc4389a"
+      },
+      "parentId": "8e80fd4d-4828-499b-8d02-35955a2d14e7"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": [
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "id_token",
+              "value": "${\"TPA 2.0 - NPSN\".\"Get npsn info. (using mobile first product id)\".\"Launcher login to get id_token\".\"response\".\"body\".\"id_token\"}"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "user_no",
+              "value": "${\"TPA 2.0 - NPSN\".\"Get npsn info. (using mobile first product id)\".\"Launcher login to get id_token\".\"response\".\"body\".\"user_no\"}"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "product_id",
+              "value": "10200"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "device_id",
+              "value": "${DEVICE_ID}"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "client_id",
+              "value": "7456351722"
+            }
+          ]
+        },
+        "bodyType": "Form",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "retryConfiguration": {
+        "intervalInSeconds": 10,
+        "retryCount": 1
+      },
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${MANTIS_HOST}",
+        "path": "/auth/authorize_game"
+      },
+      "description": "",
+      "id": "ad5ea955-9812-4c2c-83bd-713eb3e3344e",
+      "lastModified": "2017-11-15T17:43:14.402-08:00",
+      "name": "Request authorize_game",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/x-www-form-urlencoded"
+        }
+      ],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "200"
+        },
+        {
+          "comparison": "Exists",
+          "subject": "ResponseJsonBody",
+          "path": "$.code",
+          "value": "200"
+        }
+      ],
+      "metaInfo": {
+        "ownerId": "auth0|59273f64e2bfaf3e2bc4389a"
+      },
+      "parentId": "8e80fd4d-4828-499b-8d02-35955a2d14e7"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": [
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "auto_login",
+              "value": "false"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "client_id",
+              "value": "${LAUNCHER_CLIENT_ID}"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "device_id",
+              "value": "${DEVICE_ID}"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "id",
+              "value": "${USER_ID}"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "password",
+              "value": "${USER_PASSWORD}"
+            }
+          ]
+        },
+        "bodyType": "Form",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${ACCOUNT_WEB_HOST}",
+        "path": "/account/login/launcher"
+      },
+      "id": "d233a552-f7cd-4883-bcad-4b66271c1366",
+      "lastModified": "2017-11-15T14:21:29.725-08:00",
+      "name": "Launcher login to get id_token",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/x-www-form-urlencoded"
+        }
+      ],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "200"
+        },
+        {
+          "comparison": "Exists",
+          "subject": "ResponseJsonBody",
+          "path": "$.id_token",
+          "value": "200"
+        }
+      ],
+      "metaInfo": {
+        "ownerId": "auth0|5993453c31d6c842b92dba92"
+      },
+      "parentId": "8e80fd4d-4828-499b-8d02-35955a2d14e7"
+    },
+    {
+      "type": "Scenario",
+      "description": "- PRODUCT_ID: 10300  \n- CLIENT_ID: 6600873781  \n- CLIENT_SECRET: c9571716fed1fe39c21c37c109dca3bccd5f1781e00f44d3ad0e86b761c2f374  \n- CLIENT_AUTHORIZATION: NjYwMDg3Mzc4MTpjOTU3MTcxNmZlZDFmZTM5YzIxYzM3YzEwOWRjYTNiY2NkNWYxNzgxZTAwZjQ0ZDNhZDBlODZiNzYxYzJmMzc0",
+      "id": "b333cfc4-9415-405a-853a-6160fa22d586",
+      "lastModified": "2017-11-16T11:52:11.974-08:00",
+      "name": "Get npsn info. (using pc first product id) and user haven't a npsn account.",
+      "requestOrder": [
+        "Launcher login to get id_token",
+        "Request authorize_game",
+        "Request access_token",
+        "Request user NPSN information."
+      ],
+      "parentId": "ea95d713-3331-4fdf-b172-6ab7e4cdf794"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": [
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "client_id",
+              "value": "6600873781"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "grant_type",
+              "value": "authorization_code"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "code",
+              "value": "${\"TPA 2.0 - NPSN\".\"Get npsn info. (using pc first product id) and user haven't a npsn account.\".\"Request authorize_game\".\"response\".\"body\".\"code\"}"
+            }
+          ]
+        },
+        "bodyType": "Form",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${APIGW_HOST}",
+        "path": "/oauth2/v1/token"
+      },
+      "id": "28f26836-4d9d-4d39-9c29-de6e5bf2aa02",
+      "lastModified": "2017-11-16T11:53:31.941-08:00",
+      "name": "Request access_token",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/x-www-form-urlencoded"
+        },
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "Basic NjYwMDg3Mzc4MTpjOTU3MTcxNmZlZDFmZTM5YzIxYzM3YzEwOWRjYTNiY2NkNWYxNzgxZTAwZjQ0ZDNhZDBlODZiNzYxYzJmMzc0"
+        }
+      ],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "200"
+        },
+        {
+          "comparison": "Exists",
+          "subject": "ResponseJsonBody",
+          "path": "$.access_token",
+          "value": "200"
+        }
+      ],
+      "metaInfo": {
+        "ownerId": "auth0|59273f64e2bfaf3e2bc4389a"
+      },
+      "parentId": "b333cfc4-9415-405a-853a-6160fa22d586"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": [
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "id_token",
+              "value": "${\"TPA 2.0 - NPSN\".\"Get npsn info. (using pc first product id) and user haven't a npsn account.\".\"Launcher login to get id_token\".\"response\".\"body\".\"id_token\"}"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "user_no",
+              "value": "${\"TPA 2.0 - NPSN\".\"Get npsn info. (using pc first product id) and user haven't a npsn account.\".\"Launcher login to get id_token\".\"response\".\"body\".\"user_no\"}"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "product_id",
+              "value": "10300"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "device_id",
+              "value": "${DEVICE_ID}"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "client_id",
+              "value": "6600873781"
+            }
+          ]
+        },
+        "bodyType": "Form",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "retryConfiguration": {
+        "intervalInSeconds": 10,
+        "retryCount": 1
+      },
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${MANTIS_HOST}",
+        "path": "/auth/authorize_game"
+      },
+      "description": "",
+      "id": "3309d2fd-d4a1-4068-ab73-f75d62de493c",
+      "lastModified": "2017-11-16T11:52:51.954-08:00",
+      "name": "Request authorize_game",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/x-www-form-urlencoded"
+        }
+      ],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "200"
+        },
+        {
+          "comparison": "Exists",
+          "subject": "ResponseJsonBody",
+          "path": "$.code",
+          "value": "200"
+        }
+      ],
+      "metaInfo": {
+        "ownerId": "auth0|59273f64e2bfaf3e2bc4389a"
+      },
+      "parentId": "b333cfc4-9415-405a-853a-6160fa22d586"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": [
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "auto_login",
+              "value": "false"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "client_id",
+              "value": "${LAUNCHER_CLIENT_ID}"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "device_id",
+              "value": "${DEVICE_ID}"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "id",
+              "value": "${USER_ID}"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "password",
+              "value": "${USER_PASSWORD}"
+            }
+          ]
+        },
+        "bodyType": "Form",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${ACCOUNT_WEB_HOST}",
+        "path": "/account/login/launcher"
+      },
+      "id": "7fbbaf85-ddca-48d1-9d56-a234adf93d4c",
+      "lastModified": "2017-11-15T14:21:29.725-08:00",
+      "name": "Launcher login to get id_token",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/x-www-form-urlencoded"
+        }
+      ],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "200"
+        },
+        {
+          "comparison": "Exists",
+          "subject": "ResponseJsonBody",
+          "path": "$.id_token",
+          "value": "200"
+        }
+      ],
+      "metaInfo": {
+        "ownerId": "auth0|59273f64e2bfaf3e2bc4389a"
+      },
+      "parentId": "b333cfc4-9415-405a-853a-6160fa22d586"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+        "name": "GET"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": [
+            {
+              "enabled": true,
+              "name": "token",
+              "value": "${\"TPA 2.0 - NPSN\".\"Get npsn info. (using pc first product id) and user haven't a npsn account.\".\"Request access_token\".\"response\".\"body\".\"access_token\"}"
+            },
+            {
+              "enabled": true,
+              "name": "product_id",
+              "value": "10300"
+            },
+            {
+              "enabled": true,
+              "name": "user_no",
+              "value": "${\"TPA 2.0 - NPSN\".\"Get npsn info. (using pc first product id) and user haven't a npsn account.\".\"Launcher login to get id_token\".\"response\".\"body\".\"user_no\"}"
+            }
+          ]
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${MANTIS_HOST}",
+        "path": "/users/me/npsn"
+      },
+      "description": "",
+      "id": "8d33a666-e964-44aa-927f-eab202a542db",
+      "lastModified": "2017-11-16T11:53:31.941-08:00",
+      "name": "Request user NPSN information.",
+      "headers": [],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "404"
+        },
+        {
+          "comparison": "Equals",
+          "subject": "ResponseJsonBody",
+          "enabled": true,
+          "path": "$.error.code",
+          "value": "\"1004\""
+        }
+      ],
+      "metaInfo": {
+        "ownerId": "auth0|59273f64e2bfaf3e2bc4389a"
+      },
+      "parentId": "b333cfc4-9415-405a-853a-6160fa22d586"
+    },
+    {
+      "type": "Scenario",
+      "description": "- PRODUCT_ID: 10300  \n- CLIENT_ID: 6600873781  \n- CLIENT_SECRET: c9571716fed1fe39c21c37c109dca3bccd5f1781e00f44d3ad0e86b761c2f374  \n- CLIENT_AUTHORIZATION: NjYwMDg3Mzc4MTpjOTU3MTcxNmZlZDFmZTM5YzIxYzM3YzEwOWRjYTNiY2NkNWYxNzgxZTAwZjQ0ZDNhZDBlODZiNzYxYzJmMzc0",
+      "id": "26d668ae-d88d-4a23-8a64-22f7449d42d9",
+      "lastModified": "2017-11-16T11:51:20.821-08:00",
+      "name": "Get npsn info. (using pc first product id) and user have a npsn account.",
+      "requestOrder": [
+        "Launcher login to get id_token",
+        "Request authorize_game",
+        "Request access_token",
+        "Request user NPSN information."
+      ],
+      "parentId": "ea95d713-3331-4fdf-b172-6ab7e4cdf794"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": [
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "client_id",
+              "value": "6600873781"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "grant_type",
+              "value": "authorization_code"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "code",
+              "value": "${\"TPA 2.0 - NPSN\".\"Get npsn info. (using pc first product id) and user have a npsn account.\".\"Request authorize_game\".\"response\".\"body\".\"code\"}"
+            }
+          ]
+        },
+        "bodyType": "Form",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${APIGW_HOST}",
+        "path": "/oauth2/v1/token"
+      },
+      "id": "cfd9d4fc-73fd-4f7e-bcf0-85ab1d847367",
+      "lastModified": "2017-11-16T11:54:51.932-08:00",
+      "name": "Request access_token",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/x-www-form-urlencoded"
+        },
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "Basic NjYwMDg3Mzc4MTpjOTU3MTcxNmZlZDFmZTM5YzIxYzM3YzEwOWRjYTNiY2NkNWYxNzgxZTAwZjQ0ZDNhZDBlODZiNzYxYzJmMzc0"
+        }
+      ],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "200"
+        },
+        {
+          "comparison": "Exists",
+          "subject": "ResponseJsonBody",
+          "path": "$.access_token",
+          "value": "200"
+        }
+      ],
+      "metaInfo": {
+        "ownerId": "auth0|59273f64e2bfaf3e2bc4389a"
+      },
+      "parentId": "26d668ae-d88d-4a23-8a64-22f7449d42d9"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": [
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "id_token",
+              "value": "${\"TPA 2.0 - NPSN\".\"Get npsn info. (using pc first product id) and user have a npsn account.\".\"Launcher login to get id_token\".\"response\".\"body\".\"id_token\"}"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "user_no",
+              "value": "${\"TPA 2.0 - NPSN\".\"Get npsn info. (using pc first product id) and user have a npsn account.\".\"Launcher login to get id_token\".\"response\".\"body\".\"user_no\"}"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "product_id",
+              "value": "10300"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "device_id",
+              "value": "${DEVICE_ID}"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "client_id",
+              "value": "6600873781"
+            }
+          ]
+        },
+        "bodyType": "Form",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "retryConfiguration": {
+        "intervalInSeconds": 10,
+        "retryCount": 1
+      },
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${MANTIS_HOST}",
+        "path": "/auth/authorize_game"
+      },
+      "description": "",
+      "id": "3494af23-6458-4573-92e4-296df3d9e6e2",
+      "lastModified": "2017-11-16T11:54:51.932-08:00",
+      "name": "Request authorize_game",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/x-www-form-urlencoded"
+        }
+      ],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "200"
+        },
+        {
+          "comparison": "Exists",
+          "subject": "ResponseJsonBody",
+          "path": "$.code",
+          "value": "200"
+        }
+      ],
+      "metaInfo": {
+        "ownerId": "auth0|59273f64e2bfaf3e2bc4389a"
+      },
+      "parentId": "26d668ae-d88d-4a23-8a64-22f7449d42d9"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": [
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "auto_login",
+              "value": "false"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "client_id",
+              "value": "${LAUNCHER_CLIENT_ID}"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "device_id",
+              "value": "${DEVICE_ID}"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "id",
+              "value": "anycall@naver.com"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "password",
+              "value": "276f4dc22af5955aa4ec821d8719381ce8260eff296b145dae4950c58a3db0c502f6b0a4aa004d745622c5a5bd9f428ffcd8d1c356a0f377b47f55ca8f075e4a"
+            }
+          ]
+        },
+        "bodyType": "Form",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${ACCOUNT_WEB_HOST}",
+        "path": "/account/login/launcher"
+      },
+      "id": "3f3bf1a4-345d-4b9a-8fa6-80146bad1709",
+      "lastModified": "2017-11-16T14:17:23.115-08:00",
+      "name": "Launcher login to get id_token",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/x-www-form-urlencoded"
+        }
+      ],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "200"
+        },
+        {
+          "comparison": "Exists",
+          "subject": "ResponseJsonBody",
+          "path": "$.id_token",
+          "value": "200"
+        }
+      ],
+      "metaInfo": {
+        "ownerId": "auth0|59273f64e2bfaf3e2bc4389a"
+      },
+      "parentId": "26d668ae-d88d-4a23-8a64-22f7449d42d9"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+        "name": "GET"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": [
+            {
+              "enabled": true,
+              "name": "token",
+              "value": "${\"TPA 2.0 - NPSN\".\"Get npsn info. (using pc first product id) and user have a npsn account.\".\"Request access_token\".\"response\".\"body\".\"access_token\"}"
+            },
+            {
+              "enabled": true,
+              "name": "product_id",
+              "value": "10300"
+            },
+            {
+              "enabled": true,
+              "name": "user_no",
+              "value": "${\"TPA 2.0 - NPSN\".\"Get npsn info. (using pc first product id) and user have a npsn account.\".\"Launcher login to get id_token\".\"response\".\"body\".\"user_no\"}"
+            }
+          ]
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "${MANTIS_HOST}",
+        "path": "/users/me/npsn"
+      },
+      "description": "",
+      "id": "e69555ea-6e90-4559-8497-ce4b1fb13011",
+      "lastModified": "2017-11-16T14:32:18.151-08:00",
+      "name": "Request user NPSN information.",
+      "headers": [],
+      "assertions": [
+        {
+          "comparison": "Equals",
+          "subject": "ResponseStatus",
+          "path": "code",
+          "value": "200"
+        },
+        {
+          "comparison": "Exists",
+          "subject": "ResponseJsonBody",
+          "enabled": true,
+          "path": "$.npsn",
+          "value": "\"1004\""
+        }
+      ],
+      "metaInfo": {
+        "ownerId": "auth0|59273f64e2bfaf3e2bc4389a"
+      },
+      "parentId": "26d668ae-d88d-4a23-8a64-22f7449d42d9"
+    },
+    {
+      "type": "Context",
+      "id": "3abcfc78-7ca3-4ca3-905a-06c6d2c1ed5e",
+      "lastModified": "2017-11-16T14:00:05.650-08:00",
+      "name": "Local",
+      "variables": [
+        {
+          "enabled": true,
+          "name": "APIGW_HOST",
+          "value": "https://dev-api.pf.nexon.net"
+        },
+        {
+          "enabled": true,
+          "name": "ACCOUNT_WEB_HOST",
+          "value": "https://dev-accounts.pf.nexon.net"
+        },
+        {
+          "enabled": true,
+          "name": "DEVICE_ID",
+          "value": "1893396b63784725b6b8be774db4aca6"
+        },
+        {
+          "enabled": true,
+          "name": "USER_ID",
+          "value": "integrationtest001@gmail.com"
+        },
+        {
+          "enabled": true,
+          "name": "USER_PASSWORD",
+          "value": "bf400c2a1cbc2c5536aec42018864edb5738ed69bf5488a017a1aead21f888ae05a13c2f30de004a4a6fa4eedeb8c8d62f79712a4f8489e7eca408e57b36c250"
+        },
+        {
+          "enabled": true,
+          "name": "LAUNCHER_CLIENT_ID",
+          "value": "7853644408"
+        },
+        {
+          "enabled": true,
+          "name": "MANTIS_HOST",
+          "value": "http://localhost:8080"
+        }
+      ]
+    }
+  ]
+}
