@@ -27,5 +27,10 @@ node {
         echo 'API tested.'
     }
   }
+  post {
+      always {
+        junit '**/target/surefire-reports/*.xml'
+      }
+   } 
 }
   
