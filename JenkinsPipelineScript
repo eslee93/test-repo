@@ -21,7 +21,8 @@ node {
 
         // Maven installation declared in the Jenkins "Global Tool Configuration"
         withMaven(maven: 'MAVEN3') {
-          sh "mvn clean test -Dlicense_key=\"$RESTLET_CLIENT_LICENSE\""
+          sh "mvn clean test -DlicenseKey=CWxK1bQA+7OCe+tXEQJ/TwowS9A2jrXiQAHRpCJy0ngxgXorCSwpX0R4sKtjTS1qoQK3bZv/krU26A0clAryBewNJew736yOkLkZoyQWMCAkTRpJw+YoY2J4lcEcIMQk"
+          //sh "mvn clean test -Dlicense_key=\"$RESTLET_CLIENT_LICENSE\""
         }
         echo 'API tested.'
     }
