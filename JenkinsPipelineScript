@@ -1,0 +1,31 @@
+node {
+  stage('Checkout') {
+    checkout scm
+  }
+  stage('Build') {
+    echo 'Building and unit testing the API.'
+    // this step is faked
+    echo 'API built and unit-tested.'
+  }
+  stage('Deploy') {
+    echo 'Deploying the API.'
+    // this step is faked
+    echo 'API deployed.'
+  }
+  stage('Test') {
+    echo 'Testing the API with Restlet Client Maven plugin'
+
+    withCredentials([
+      string(credentialsId: 'RESTLET_CLIENT_LICENSE', variable: 'RESTLET_CLIENT_LICENSE')]) {
+
+        // Maven installation declared in the Jenkins "Global Tool Configuration"
+        withMaven(maven: 'MAVEN3') {
+          sh "mvn clean test -B \
+             -Dtest_file='src/test/resources/contacts_api_tests.json' \
+             -Dlicense_key=\"$RESTLET_CLIENT_LICENSE\""
+        }
+        echo 'API tested.'
+    }
+  }
+}
+  
