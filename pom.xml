@@ -16,7 +16,7 @@
                             <goal>test</goal>
                         </goals>
                         <configuration>
-                          <file>TPA_2_0_NPSN.json</file>
+                          <file>src/test/resources/TPA_2_0_NPSN.json</file>
                           <selectedEnvironment>Local</selectedEnvironment>
                           <licenseKey>${licenseKey}</licenseKey>
                         </configuration>
